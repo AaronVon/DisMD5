@@ -1,13 +1,21 @@
 #!/bin/bash
-echo "0" > x
-mkdir dismd5
-path=`ls $1`
 IFS=$(echo -en "\n\b")
-for f in $path;
+path=$1
+path=${path// /\\ }
+# echo $path
+files=`ls $1`
+
+echo "0" > x
+mkdir $path"/dismd5"
+
+for f in $files;
 do
   #random name
-  rand=$(date +%s%N)
-  name=$1"/dismd5/"${rand}".dmg"
+  rand=$(head -200 /dev/urandom | cksum | cut -f1 -d" ")
+  name=$path"/dismd5/"${rand}".dmg"
+  f=${f// /\\ }
+  f=$path"/"$f
+  # echo $f
   # echo $name
-  cat $f x > $name
+  cat $f ./x > $name
 done
